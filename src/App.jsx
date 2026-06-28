@@ -1,11 +1,10 @@
 import "./index.css";
 import { useState, useEffect } from "react";
+import data from "./dummyData/data.json";
 
 function App() {
-    const api = "https://dummyjson.com/recipes/";
-
     const [results, setResults] = useState([]);
-    const [input, setInput] = useState("");
+    const [input, setInput] = useState("");    
 
     const fetchApi = async (api) => {
         try {
@@ -18,28 +17,35 @@ function App() {
     };
 
     useEffect(() => {
-        fetchApi(api + "search?q=" + input);
+
+        const filteredData = data.filter((recipe) => {
+            return recipe.name.toLowerCase().includes(input.toLowerCase());
+        });
+        setResults(filteredData);
     }, [input]);
 
     return (
         <>
             <div className="container">
-                <header>
-                    <h1>Auto Search Bar</h1>
-                </header>
-                <main>
-                    <div>
-                        <input 
-                            type="text"
+                <div className="header">
+                    <header>
+                        <h1> Auto Complete Search Bar </h1>
+                    </header>
+                </div>
+
+                <div className="main">
+                    <div className="searchBar">
+                        <input type="text"  
                             onChange={(e) => setInput(e.target.value)}
-                         />
+                        />
                     </div>
                     <div className="results">
                         {results.map((e) => {
                             return <span key={e.id}>{e.name}</span>
                         })}
-                    </div>
-                </main>
+                    </div>  
+                </div>
+
             </div>
         </>
     );
